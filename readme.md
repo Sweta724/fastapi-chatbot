@@ -143,7 +143,7 @@ This project is licensed under the MIT License.
 
 ## Author
 
-[**Your Name**](https://github.com/yourusername)\
+[**Sweta**](https://github.com/Sweta724)\
 Feel free to reach out for suggestions, improvements, or collaboration ideas.
 
 ---
