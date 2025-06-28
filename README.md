@@ -1,5 +1,5 @@
-Gemini Safe Chatbot API
-This project is a FastAPI-based chatbot API integrated with Google Gemini (generative AI) to create a professional, safe, and company-specific conversational interface.
+#Gemini Safe Chatbot API
+#This project is a FastAPI-based chatbot API integrated with Google Gemini (generative AI) to create a professional, safe, and company-specific conversational interface.
 
 Features
 Restricts responses to company services, contact, and location
