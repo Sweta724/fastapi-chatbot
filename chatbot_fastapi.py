@@ -5,7 +5,7 @@ import time
 import uvicorn
 
 # Configure Gemini API key
-genai.configure(api_key="AIzaSyBz8txRId0M_sd-qfnXKo9QRZ3TO5gm6ow")
+genai.configure(api_key="Add your API Key")
 
 # Start Gemini model and chat session
 model = genai.GenerativeModel('gemini-2.0-flash')
