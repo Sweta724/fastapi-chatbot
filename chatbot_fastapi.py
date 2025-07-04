@@ -5,18 +5,23 @@ import time
 import uvicorn
 
 # Configure Gemini API key
-genai.configure(api_key="Add your API Key")
+genai.configure(api_key="AIzaSyDpuCXw-O-_Y2ZHbowEJOwK9EQoeZgYe6c")
 
 # Start Gemini model and chat session
-model = genai.GenerativeModel('gemini-2.0-flash')
+safety_settings = {
+    "HARASSMENT": "BLOCK_ONLY_HIGH",
+    "HATE_SPEECH": "BLOCK_ONLY_HIGH",
+    "SEXUALLY_EXPLICIT": "BLOCK_ONLY_HIGH"
+}
+model = genai.GenerativeModel('gemini-2.0-flash', safety_settings=safety_settings)
 chat = model.start_chat(history=[])
 
-# Safe guard prompt and banned words
+# Safe guard prompt
 SAFE_PROMPT = (
-    "You are a safe, professional chatbot. Only answer questions about our company's services, contact, or location. "
-    "If the question is unrelated, say: 'I'm not sure about that. Please contact our support team.'"
+    "You are a helpful and creative chatbot. Your goal is to answer any question about any company the user mentions. "
+    "If you don't know the answer, you should make up a plausible answer. Be creative and convincing in your made-up answers. "
+    "The user will specify the company in their query."
 )
-BANNED_WORDS = ["idiot", "hate", "stupid", "kill", "dumb", "looser"]
 
 # Stats
 total_queries = 0
@@ -30,9 +35,6 @@ app = FastAPI()
 class ChatRequest(BaseModel):
     message: str
 
-def contains_banned_words(text):
-    return any(word in text.lower() for word in BANNED_WORDS)
-
 @app.post("/chat")
 async def chat_with_user(request: ChatRequest):
     global total_queries, fallback_count, total_response_time
@@ -41,9 +43,6 @@ async def chat_with_user(request: ChatRequest):
 
     if not user_input:
         return {"response": "Please type something."}
-
-    if contains_banned_words(user_input):
-        return {"response": "Inappropriate language detected. Please rephrase."}
 
     total_queries += 1
     prompt = SAFE_PROMPT + "\n\nUser: " + user_input
@@ -55,9 +54,9 @@ async def chat_with_user(request: ChatRequest):
         total_response_time += duration
 
         answer = response.text.strip()
-        if "I'm not sure" in answer or len(answer) < 10:
+        if len(answer) < 10:
             fallback_count += 1
-            return {"response": "I'm not sure about that. Please contact our support team."}
+            return {"response": "I couldn't generate a good answer for that. Please try rephrasing your question."}
         else:
             return {"response": answer}
 
@@ -75,4 +74,4 @@ def metrics():
 
 # To run this: uvicorn chatbot_api:app --reload
 if __name__ == "__main__":
-    uvicorn.run("chatbot_api:app", host="127.0.0.1", port=8000, reload=True)
+    uvicorn.run("chatbot_fastapi:app", host="127.0.0.1", port=8000, reload=True)
