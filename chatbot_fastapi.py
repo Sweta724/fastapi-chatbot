@@ -5,7 +5,7 @@ import time
 import uvicorn
 
 # Configure Gemini API key
-genai.configure(api_key="AIzaSyDpuCXw-O-_Y2ZHbowEJOwK9EQoeZgYe6c")
+genai.configure(api_key="Enter your API key")
 
 # Start Gemini model and chat session
 safety_settings = {
